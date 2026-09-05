@@ -23,6 +23,43 @@
         <section id="form">
             <h2>报名表单</h2>
         </section>
+        <form action="#" method="get">
+        <p>
+        <label for="name">姓名</label>
+        <input type="text" id="name" name="name" placeholder="填写你的姓名" required>
+      </p>
+      <p>
+        <label for="mail">邮箱</label>
+        <input type="email" id="mail" name="mail" required>
+      </p>
+      <p>      
+        <label for="study_name">学号</label>
+        <input type="text" id="study_name" name="study_name" placeholder="填写你的学号" required>
+      </p>
+      <p>            
+        <label for="choice">选择的社团名称</label>
+        <input type="text" id="choice" name="choice" placeholder="填写你想要加入的社团的名称" required>
+      </p>      
+      <p>你想要加入这个社团的意愿</p>
+      <p>
+        <label><input type="radio" name="score" value="5" checked> 非常强</label>
+        <label><input type="radio" name="score" value="4"> 强</label>
+        <label><input type="radio" name="score" value="3"> 一般</label>
+      </p>
+      <p>该社团吸引你的点（可多选）</p>
+      <p>
+        <label><input type="checkbox" name="topic" value="layout"> 可以学习新技术</label>
+        <label><input type="checkbox" name="topic" value="js"> 可以交到新的朋友</label>
+        <label><input type="checkbox" name="topic" value="chart"> 对该社团的知识十分感兴趣</label>
+      </p>
+      <p>
+        <label for="advice">介绍一下你自己</label><br>
+        <textarea id="advice" name="advice" rows="4" maxlength="200" placeholder="说点有关于你自己的爱好，经历等等"></textarea>
+      </p>
+      <p>
+        <button type="submit">提交社团报名表</button>
+      </p>
+    </form>
     </main>
     <footer>
         <p>软件开发综合实践，自主实践任务</p>
