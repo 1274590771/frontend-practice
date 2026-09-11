@@ -107,18 +107,65 @@ const toCategoryEntries = (categoryTotals, total) =>
 // 金额格式化，统一保留两位小数
 const yuan = (n) => n.toFixed(2) + ' 元';
 
-const { valid, rejected } = splitRecords(records);
-const total = totalAmount(valid);
-const entries = toCategoryEntries(sumByCategory(valid), total);
+// ---------------------------------------------------------------------------
+// 预算差额：正数表示超支，负数表示还有结余
+// ---------------------------------------------------------------------------
+const budgetGap = (total, budget) => total - budget;
 
-console.log('有效记录 ' + valid.length + ' 条，非法记录 ' + rejected.length + ' 条');
-console.log('总支出：' + yuan(total));
-console.log('分类汇总：');
-entries.forEach((e) => {
-  const count = recordsOfCategory(valid, e.category).length;
-  console.log(
-    '  ' + e.category + '  ' + count + ' 笔  ' + yuan(e.amount) +
-    '  占 ' + e.percent.toFixed(1) + '%'
+// ---------------------------------------------------------------------------
+// 生成主报告，只负责把各部分结果拼成可读文字
+// ---------------------------------------------------------------------------
+const buildReport = (valid, rejected, budget) => {
+  if (valid.length === 0) return '没有有效的消费记录，无法统计。';
+
+  const total = totalAmount(valid);
+  const entries = toCategoryEntries(sumByCategory(valid), total);
+  const top = largestExpense(valid);
+  const gap = budgetGap(total, budget);
+
+  const lines = [];
+  lines.push('有效记录 ' + valid.length + ' 条，非法记录 ' + rejected.length + ' 条');
+  lines.push('总支出：' + yuan(total) + '（预算 ' + yuan(budget) + '）');
+  lines.push(
+    gap > 0 ? '超支预警：已超出预算 ' + yuan(gap) : '预算内，剩余 ' + yuan(-gap)
   );
-});
-console.log('最大单笔：' + yuan(largestExpense(valid).amount));
+  lines.push('分类占比：');
+  entries.forEach((e) => {
+    const count = recordsOfCategory(valid, e.category).length;
+    lines.push(
+      '  ' + e.category + '  ' + count + ' 笔  ' + yuan(e.amount) +
+      '  占 ' + e.percent.toFixed(1) + '%'
+    );
+  });
+  lines.push('最大单笔：' + yuan(top.amount) + '（' + top.category + ' · ' + top.note + '）');
+  return lines.join('\n');
+};
+
+// ---------------------------------------------------------------------------
+// 生成非法记录提示，逐条说明被丢弃的原因
+// 记录可能压根不是对象，id 取不到时用 ? 兜底，避免再抛异常
+// ---------------------------------------------------------------------------
+const buildRejectReport = (rejected) => {
+  if (rejected.length === 0) return '没有非法记录。';
+  return rejected
+    .map((item) => {
+      const id = item.record && item.record.id !== undefined ? item.record.id : '?';
+      return '  第 ' + id + ' 条：' + item.reason;
+    })
+    .join('\n');
+};
+
+// ---------------------------------------------------------------------------
+// 入口：清洗一次，分别产出统计报告与非法记录提示
+// 用 try 兜底，保证异常时程序不崩溃、仍能给出可读信息
+// ---------------------------------------------------------------------------
+try {
+  const { valid, rejected } = splitRecords(records);
+  console.log('===== 消费记账统计 =====');
+  console.log(buildReport(valid, rejected, MONTHLY_BUDGET));
+  console.log('');
+  console.log('----- 已丢弃的非法记录 -----');
+  console.log(buildRejectReport(rejected));
+} catch (err) {
+  console.error('统计失败：' + err.message);
+}
