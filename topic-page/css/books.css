@@ -1,0 +1,238 @@
+/* ==========================================================================
+   书籍推荐页样式
+   移动优先：基础样式服务于窄屏，宽屏在文件末尾用媒体查询增强。
+   ========================================================================== */
+
+:root {
+  --ink: #1f2328;
+  --ink-soft: #5b6470;
+  --line: #e3e6ea;
+  --bg: #ffffff;
+  --bg-alt: #f7f5f1;
+  --accent: #9a6b3f;
+  --accent-dark: #7d5530;
+  --radius: 12px;
+  --wrap: 1080px;
+  --shadow: 0 1px 2px rgba(31, 35, 40, .06), 0 8px 24px rgba(31, 35, 40, .05);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+  line-height: 1.7;
+  color: var(--ink);
+  background: var(--bg);
+  /* 长英文单词与长链接不撑破容器，避免横向滚动 */
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: 1.3;
+}
+
+p {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+}
+
+/* 键盘可达性：平时移出视口，聚焦时滑入 */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: -9999px;
+  z-index: 10;
+  padding: 8px 16px;
+  background: var(--ink);
+  color: #fff;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* --------------------------------------------------------------------------
+   页头导航：Flex 两端对齐，窄屏自动换行，宽屏固定吸顶
+   -------------------------------------------------------------------------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: rgba(255, 255, 255, .92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+
+.nav-wrap {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px 20px;
+}
+
+.logo {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-decoration: none;
+}
+
+.main-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+
+.main-nav a {
+  padding: 4px 0;
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+
+.main-nav a:hover,
+.main-nav a:focus-visible {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   首屏
+   -------------------------------------------------------------------------- */
+
+.hero {
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--line);
+}
+
+.hero-inner {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 48px 16px;
+}
+
+.hero-kicker {
+  margin-bottom: 8px;
+  color: var(--accent);
+  font-size: .8125rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  /* 字号随视口平滑变化，省掉一组只为调字号的断点 */
+  font-size: clamp(1.625rem, 5vw, 2.5rem);
+}
+
+.hero-lead {
+  max-width: 46ch;
+  margin-top: 14px;
+  color: var(--ink-soft);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 22px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 999px;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background: var(--accent-dark);
+}
+
+.btn-ghost {
+  background: #fff;
+  border-color: var(--line);
+}
+
+.btn-ghost:hover,
+.btn-ghost:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   区块外壳：section 负责纵向留白与整宽底色，内容元素各自居中限宽
+   -------------------------------------------------------------------------- */
+
+.section {
+  padding: 44px 16px;
+}
+
+.section-alt {
+  background: var(--bg-alt);
+  border-block: 1px solid var(--line);
+}
+
+.section-head,
+.card-grid,
+.category-grid,
+.rank-list {
+  max-width: var(--wrap);
+  margin-inline: auto;
+}
+
+.section-head {
+  margin-bottom: 24px;
+}
+
+.section-head h2 {
+  font-size: 1.375rem;
+}
+
+.section-head p {
+  margin-top: 6px;
+  color: var(--ink-soft);
+}
+
+.site-footer {
+  padding: 28px 16px;
+  color: var(--ink-soft);
+  font-size: .875rem;
+  text-align: center;
+  border-top: 1px solid var(--line);
+}
