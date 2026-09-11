@@ -64,5 +64,61 @@ const splitRecords = (list) =>
     { valid: [], rejected: [] }
   );
 
+// ---------------------------------------------------------------------------
+// 总支出：所有合法记录的金额求和
+// ---------------------------------------------------------------------------
+const totalAmount = (list) => list.reduce((sum, r) => sum + r.amount, 0);
+
+// ---------------------------------------------------------------------------
+// 按类别汇总金额，返回 { 类别: 金额 } 结构
+// ---------------------------------------------------------------------------
+const sumByCategory = (list) =>
+  list.reduce((acc, r) => {
+    acc[r.category] = (acc[r.category] || 0) + r.amount;
+    return acc;
+  }, {});
+
+// ---------------------------------------------------------------------------
+// 最大单笔支出；空数组返回 null，交给调用方决定怎么展示
+// ---------------------------------------------------------------------------
+const largestExpense = (list) =>
+  list.length === 0
+    ? null
+    : list.reduce((max, r) => (r.amount > max.amount ? r : max), list[0]);
+
+// ---------------------------------------------------------------------------
+// 筛选出某个类别的记录，用于统计该类别有几笔
+// ---------------------------------------------------------------------------
+const recordsOfCategory = (list, category) =>
+  list.filter((r) => r.category === category);
+
+// ---------------------------------------------------------------------------
+// 把类别汇总对象转成条目数组并补上占比，按金额从高到低排序
+// ---------------------------------------------------------------------------
+const toCategoryEntries = (categoryTotals, total) =>
+  Object.entries(categoryTotals)
+    .map(([category, amount]) => ({
+      category,
+      amount,
+      percent: total === 0 ? 0 : (amount / total) * 100,
+    }))
+    .sort((a, b) => b.amount - a.amount);
+
+// 金额格式化，统一保留两位小数
+const yuan = (n) => n.toFixed(2) + ' 元';
+
 const { valid, rejected } = splitRecords(records);
+const total = totalAmount(valid);
+const entries = toCategoryEntries(sumByCategory(valid), total);
+
 console.log('有效记录 ' + valid.length + ' 条，非法记录 ' + rejected.length + ' 条');
+console.log('总支出：' + yuan(total));
+console.log('分类汇总：');
+entries.forEach((e) => {
+  const count = recordsOfCategory(valid, e.category).length;
+  console.log(
+    '  ' + e.category + '  ' + count + ' 笔  ' + yuan(e.amount) +
+    '  占 ' + e.percent.toFixed(1) + '%'
+  );
+});
+console.log('最大单笔：' + yuan(largestExpense(valid).amount));
