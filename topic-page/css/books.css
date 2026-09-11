@@ -442,3 +442,59 @@ a {
   text-align: center;
   border-top: 1px solid var(--line);
 }
+
+/* ==========================================================================
+   响应式断点
+   基础样式面向手机：单列卡片、16px 侧边距。
+   640px  平板：加大留白与封面，卡片墙靠 auto-fit 自然变成两列。
+   1024px 桌面：卡片墙与分类显式锁定三列，结果不依赖容器实测宽度。
+   ========================================================================== */
+
+@media (min-width: 640px) {
+  .nav-wrap {
+    padding: 14px 24px;
+  }
+
+  .hero-inner {
+    padding: 64px 24px;
+  }
+
+  .section {
+    padding: 56px 24px;
+  }
+
+  .book-cover {
+    min-height: 168px;
+  }
+
+  .book-cover span {
+    font-size: 1.375rem;
+  }
+
+  .rank-item {
+    padding: 18px 24px;
+  }
+
+  .rank-no {
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-inner {
+    padding: 80px 24px;
+  }
+
+  .section {
+    padding: 64px 24px;
+  }
+
+  .card-grid,
+  .category-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .book-cover {
+    min-height: 180px;
+  }
+}
