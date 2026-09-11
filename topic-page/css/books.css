@@ -229,6 +229,212 @@ a {
   color: var(--ink-soft);
 }
 
+/* --------------------------------------------------------------------------
+   编辑推荐卡片墙：Grid 自适应列数
+   min(260px, 100%) 是关键——轨道最小宽度不会超过容器，
+   因此 320px 这类极窄屏也不会被撑出横向滚动条。
+   -------------------------------------------------------------------------- */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 20px;
+}
+
+.book-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.book-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+/* 用渐变色块代替封面图，省掉图片资源也避免加载失败 */
+.book-cover {
+  display: grid;
+  place-items: center;
+  min-height: 148px;
+  padding: 20px;
+  color: #fff;
+  text-align: center;
+}
+
+.book-cover span {
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, .3);
+}
+
+.cover-a { background: linear-gradient(140deg, #2f6f6b, #14403d); }
+.cover-b { background: linear-gradient(140deg, #8a5a2b, #4d2f14); }
+.cover-c { background: linear-gradient(140deg, #3b4a6b, #1d2740); }
+.cover-d { background: linear-gradient(140deg, #8c3b3b, #4e1d1d); }
+.cover-e { background: linear-gradient(140deg, #6a4a86, #37244a); }
+.cover-f { background: linear-gradient(140deg, #2b5d84, #123249); }
+
+.book-body {
+  /* flex: 1 让同排卡片在 Grid 中高度一致，
+     margin-top: auto 再把链接压到卡片底部对齐 */
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px;
+}
+
+.book-body h3 {
+  font-size: 1.0625rem;
+}
+
+.book-meta {
+  color: var(--ink-soft);
+  font-size: .8125rem;
+}
+
+.book-desc {
+  color: var(--ink-soft);
+  font-size: .9375rem;
+}
+
+.book-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  padding: 2px 10px;
+  color: var(--accent);
+  background: #f4ece3;
+  font-size: .75rem;
+  border-radius: 999px;
+}
+
+.book-link {
+  margin-top: auto;
+  padding-top: 8px;
+  color: var(--accent);
+  font-size: .875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.book-link::after {
+  content: " →";
+}
+
+.book-link:hover,
+.book-link:focus-visible {
+  color: var(--accent-dark);
+  text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   分类浏览：同样是 Grid 卡片墙，但主体为纵向 Flex 列表
+   -------------------------------------------------------------------------- */
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 20px;
+}
+
+.category-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.category-card h3 {
+  font-size: 1.0625rem;
+}
+
+.category-card > p {
+  color: var(--ink-soft);
+  font-size: .9375rem;
+}
+
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 12px;
+  font-size: .9375rem;
+  border-top: 1px dashed var(--line);
+}
+
+.category-list li::before {
+  content: "·";
+  margin-right: 8px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   阅读榜单：每行一条 Flex 记录
+   flex-wrap 配合 rank-info 的可收缩基准宽度，窄屏下分数会换行而不是溢出
+   -------------------------------------------------------------------------- */
+
+.rank-list {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.rank-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 16px;
+  padding: 16px 20px;
+}
+
+.rank-item + .rank-item {
+  border-top: 1px solid var(--line);
+}
+
+.rank-no {
+  flex: 0 0 auto;
+  color: var(--accent);
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.rank-info {
+  flex: 1 1 180px;
+}
+
+.rank-info h3 {
+  font-size: 1rem;
+}
+
+.rank-info p {
+  color: var(--ink-soft);
+  font-size: .8125rem;
+}
+
+.rank-score {
+  margin-left: auto;
+  color: var(--ink-soft);
+  font-size: .8125rem;
+  white-space: nowrap;
+}
+
 .site-footer {
   padding: 28px 16px;
   color: var(--ink-soft);
