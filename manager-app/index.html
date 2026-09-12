@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>电影清单</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Microsoft YaHei", sans-serif;
+      max-width: 640px;
+      margin: 24px auto;
+      padding: 0 16px;
+      color: #222;
+    }
+    h1 { font-size: 22px; }
+
+    #movie-form {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fafafa;
+    }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field label { font-size: 13px; color: #555; }
+    .field input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .form-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 8px;
+    }
+    button {
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover { background: #f0f0f0; }
+    #submit-btn { background: #2b7de9; border-color: #2b7de9; color: #fff; }
+    #submit-btn:hover { background: #1f6ad1; }
+
+    .tip {
+      color: #c00;
+      font-size: 14px;
+      min-height: 20px;
+      margin: 12px 0;
+    }
+
+    #search-input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    #movie-list { list-style: none; padding: 0; margin: 0; }
+    #movie-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid #eee;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+    #movie-list li.empty {
+      justify-content: center;
+      color: #999;
+      border-style: dashed;
+    }
+    .movie-title { margin: 0 0 4px; font-size: 16px; }
+    .movie-meta { margin: 0; font-size: 13px; color: #666; }
+    .actions { display: flex; gap: 6px; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+  <h1>电影清单</h1>
+
+  <form id="movie-form">
+    <div class="field">
+      <label for="title-input">片名</label>
+      <input type="text" id="title-input" placeholder="如：让子弹飞">
+    </div>
+    <div class="field">
+      <label for="director-input">导演</label>
+      <input type="text" id="director-input" placeholder="如：姜文">
+    </div>
+    <div class="field">
+      <label for="year-input">年份</label>
+      <input type="number" id="year-input" placeholder="如：2010">
+    </div>
+    <div class="field">
+      <label for="rating-input">评分</label>
+      <input type="number" id="rating-input" step="0.1" placeholder="0 - 10">
+    </div>
+    <div class="form-actions">
+      <button type="submit" id="submit-btn">添加</button>
+      <button type="button" id="cancel-btn" hidden>取消编辑</button>
+    </div>
+  </form>
+
+  <p class="tip" id="tip"></p>
+
+  <input type="text" id="search-input" placeholder="搜索片名或导演">
+
+  <ul id="movie-list"></ul>
+
+  <script src="app.js"></script>
+</body>
+</html>
