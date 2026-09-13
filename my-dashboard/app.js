@@ -1,7 +1,11 @@
 // app.js
-const state = { data: null };
+const state = { data: null, selected: 'all' };
 let barChart = null;
 let lineChart = null;
+
+const visibleSeries = (metric) => state.selected === 'all'
+  ? metric.series
+  : metric.series.filter(s => s.category === state.selected);
 
 const loadData = async () => {
   const demo = new URLSearchParams(location.search).get('demo');
@@ -35,6 +39,7 @@ const loadData = async () => {
     renderCards(data);
     renderBarChart(data);
     renderLineChart(data);
+    renderCityFilter(data);
   } catch (error) {
     $('#status').text('加载失败：' + error.message).show();
   }
@@ -79,7 +84,7 @@ const renderBarChart = (data) => {
     grid: { top: 70, bottom: 50, left: 60, right: 30 },
     xAxis: { type: 'category', data: data.months },
     yAxis: { type: 'value', name: metric.unit },
-    series: metric.series.map(s => ({
+    series: visibleSeries(metric).map(s => ({
       name: s.category,
       type: 'bar',
       data: s.counts
@@ -97,7 +102,7 @@ const renderLineChart = (data) => {
     type: 'line',
     data: {
       labels: data.months,
-      datasets: metric.series.map(s => ({
+      datasets: visibleSeries(metric).map(s => ({
         label: s.category,
         data: s.counts,
         borderWidth: 2,
@@ -118,6 +123,26 @@ const renderLineChart = (data) => {
         }
       }
     }
+  });
+};
+
+const renderCityFilter = (data) => {
+  const cities = data.metrics.rainfall.series.map(s => s.category);
+  const buttons = ['<button type="button" class="btn btn-outline-primary active" data-city="all">全部城市</button>']
+    .concat(cities.map(c => '<button type="button" class="btn btn-outline-primary" data-city="' + c + '">' + c + '</button>'))
+    .join('');
+  $('#city-filter').html(buttons);
+
+  $('#city-filter').on('click', 'button', function () {
+    state.selected = $(this).data('city');
+    $('#city-filter button').removeClass('active');
+    $(this).addClass('active');
+    $('#cards .city-card').removeClass('is-active');
+    if (state.selected !== 'all') {
+      $('#cards .city-card[data-city="' + state.selected + '"]').addClass('is-active');
+    }
+    renderBarChart(state.data);
+    renderLineChart(state.data);
   });
 };
 
