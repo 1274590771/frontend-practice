@@ -1,6 +1,7 @@
 // app.js
 const state = { data: null };
 let barChart = null;
+let lineChart = null;
 
 const loadData = async () => {
   const demo = new URLSearchParams(location.search).get('demo');
@@ -33,6 +34,7 @@ const loadData = async () => {
     $('#status').hide();
     renderCards(data);
     renderBarChart(data);
+    renderLineChart(data);
   } catch (error) {
     $('#status').text('加载失败：' + error.message).show();
   }
@@ -84,6 +86,39 @@ const renderBarChart = (data) => {
     }))
     // 第二参数 true = 不合并旧配置，后续筛选城市时才能替换掉原系列
   }, true);
+};
+
+const renderLineChart = (data) => {
+  const metric = data.metrics.temperature;
+  if (lineChart !== null) {
+    lineChart.destroy();
+  }
+  lineChart = new Chart(document.querySelector('#line-chart'), {
+    type: 'line',
+    data: {
+      labels: data.months,
+      datasets: metric.series.map(s => ({
+        label: s.category,
+        data: s.counts,
+        borderWidth: 2,
+        tension: 0.3
+      }))
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: metric.label + '趋势（单位：' + metric.unit + '）'
+        },
+        subtitle: {
+          display: true,
+          text: '数据来源：' + data.source
+        }
+      }
+    }
+  });
 };
 
 window.addEventListener('resize', () => {
