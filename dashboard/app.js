@@ -42,6 +42,37 @@ const renderBarChart = (data) => {
     }))
   });
 };
+let lineChart = null;
+
+const renderLineChart = (data) => {
+  if (lineChart !== null) {
+    lineChart.destroy();               // 防重复初始化
+  }
+  const ctx = document.querySelector('#line-chart');
+  lineChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.months,
+      datasets: data.series.map(s => ({
+        label: s.category,
+        data: s.counts,
+        borderWidth: 1
+      }))
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: { display: true, text: '借阅趋势（单位：册）' }
+      }
+    }
+  });
+};
+
+window.addEventListener('resize', () => {
+  if (barChart) barChart.resize();
+  // Chart.js响应式默认自动处理，无需手动
+});
 const renderCards = (data) => {
   const months = data.months;
   data.series.forEach(s => {
