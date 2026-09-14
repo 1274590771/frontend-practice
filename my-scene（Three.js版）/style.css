@@ -1,0 +1,56 @@
+/* 星球宇宙 —— 页面外壳与 HUD 样式 */
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #05060f;
+}
+
+canvas { display: block; }
+
+/* 左上角标题 */
+#hud {
+  position: fixed;
+  left: 26px;
+  top: 24px;
+  font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+  color: #e8f0ff;
+  pointer-events: none;
+  user-select: none;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, .85);
+}
+
+#hud h1 {
+  margin: 0 0 6px;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: 3px;
+}
+
+#hud p {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  color: #8fa6c9;
+}
+
+/* 左下角操作提示 */
+#legend {
+  position: fixed;
+  left: 26px;
+  bottom: 24px;
+  font-family: "Microsoft YaHei", system-ui, sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  line-height: 2;
+  color: #8095b4;
+  pointer-events: none;
+  user-select: none;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, .85);
+}
+
+#legend b {
+  color: #d8e6ff;
+  font-weight: 600;
+}
