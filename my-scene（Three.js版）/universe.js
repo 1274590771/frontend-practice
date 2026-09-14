@@ -27,16 +27,22 @@ controls.dampingFactor = 0.06;
 controls.minDistance = 6;      // 别钻进太阳
 controls.maxDistance = 130;    // 别飞出星空壳
 
+// r128 把 material.color 当作线性空间的值，经过 sRGBEncoding 输出后整体会偏白，
+// 于是十六进制色写进去、屏上却是另一个颜色。这里统一先转到线性空间，
+// 屏幕上显示的才真正是下面写的那个色值。
+const srgb = (hex) => new THREE.Color(hex).convertSRGBToLinear();
+
 // ---------- 光源 ----------
-scene.add(new THREE.AmbientLight(0x8899cc, 0.35));
+scene.add(new THREE.AmbientLight(srgb(0x8899cc), 0.32));
 
 // 太阳处的点光源：distance = 0 表示不衰减，让最外层行星和内侧行星亮度一致，
 // 同时保留方向性，行星背面自然变暗形成明暗交界。
-const sunLight = new THREE.PointLight(0xfff0cc, 1.7, 0, 0);
+// 强度压在 1.15：再高会把木星、土星这类浅色行星打到过曝发白。
+const sunLight = new THREE.PointLight(srgb(0xfff0cc), 1.15, 0, 0);
 scene.add(sunLight);
 
 // 冷色补光：避免背光面死黑
-const fillLight = new THREE.DirectionalLight(0x5a7fd0, 0.35);
+const fillLight = new THREE.DirectionalLight(srgb(0x5a7fd0), 0.35);
 fillLight.position.set(-1, 0.6, 1);
 scene.add(fillLight);
 
@@ -49,41 +55,86 @@ function radialTexture(size, stops) {
   stops.forEach(([offset, color]) => g.addColorStop(offset, color));
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, size, size);
-  return new THREE.CanvasTexture(canvas);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.encoding = THREE.sRGBEncoding;   // canvas 里画的是 sRGB 颜色，交给渲染器时先解码
+  return texture;
 }
 
 const glowTexture = radialTexture(128, [
-  [0.00, 'rgba(255, 246, 220, 0.95)'],
-  [0.35, 'rgba(255, 178, 66, 0.38)'],
-  [1.00, 'rgba(255, 140, 30, 0)']
+  [0.00, 'rgba(255, 236, 190, 0.90)'],
+  [0.22, 'rgba(255, 170, 60, 0.30)'],
+  [0.55, 'rgba(255, 130, 30, 0.10)'],
+  [1.00, 'rgba(255, 110, 20, 0)']
 ]);
+
+const starTexture = radialTexture(64, [
+  [0.00, 'rgba(255, 255, 255, 1)'],
+  [0.40, 'rgba(255, 255, 255, 0.55)'],
+  [1.00, 'rgba(255, 255, 255, 0)']
+]);
+
+// 行星标签：文字画进 canvas 再贴到 Sprite 上，Sprite 始终正对相机，不会被转歪
+function makeLabel(text, color) {
+  const font = 'bold 40px "Microsoft YaHei", "PingFang SC", sans-serif';
+  const ruler = document.createElement('canvas').getContext('2d');
+  ruler.font = font;
+
+  const height = 64;
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.ceil(ruler.measureText(text).width) + 24;
+  canvas.height = height;
+
+  const ctx = canvas.getContext('2d');
+  ctx.font = font;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
+  ctx.shadowBlur = 8;
+  ctx.fillStyle = color;
+  ctx.fillText(text, canvas.width / 2, height / 2);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.minFilter = THREE.LinearFilter;
+  texture.encoding = THREE.sRGBEncoding;
+
+  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: texture, transparent: true, depthWrite: false
+  }));
+  const LABEL_HEIGHT = 0.5;
+  sprite.scale.set(LABEL_HEIGHT * canvas.width / height, LABEL_HEIGHT, 1);
+  return sprite;
+}
 
 // ---------- 太阳 ----------
 const SUN_RADIUS = 3;
 
 const sun = new THREE.Mesh(
   new THREE.SphereGeometry(SUN_RADIUS, 64, 48),
-  new THREE.MeshBasicMaterial({ color: 0xffb845 })  // 基础材质：自身就是光源本体，不参与光照计算
+  new THREE.MeshBasicMaterial({ color: srgb(0xffae35) })  // 基础材质：自身就是光源本体，不参与光照计算
 );
 scene.add(sun);
 
+const SUN_GLOW_SCALE = SUN_RADIUS * 3.6;
+
 const sunGlow = new THREE.Sprite(new THREE.SpriteMaterial({
   map: glowTexture,
-  color: 0xffc766,
+  color: srgb(0xffc766),
   transparent: true,
   blending: THREE.AdditiveBlending,
   depthWrite: false
 }));
-sunGlow.scale.setScalar(SUN_RADIUS * 5);
+sunGlow.scale.setScalar(SUN_GLOW_SCALE);
 scene.add(sunGlow);
 
-// 外层辉光壳：渲染背面 + 加法混合，形成一圈边缘光
+// 外层辉光壳：渲染背面 + 加法混合。注意背面加法混合会在球体轮廓处堆叠，
+// 壳越小这圈"镶边"越像一道硬边的褐色环，所以这里放大到 1.6 倍并把不透明度压到 0.07，
+// 只留一层很淡的暖色外晕。
 const corona = new THREE.Mesh(
-  new THREE.SphereGeometry(SUN_RADIUS * 1.28, 48, 32),
+  new THREE.SphereGeometry(SUN_RADIUS * 1.6, 48, 32),
   new THREE.MeshBasicMaterial({
-    color: 0xff9a2e,
+    color: srgb(0xff9a2e),
     transparent: true,
-    opacity: 0.18,
+    opacity: 0.07,
     side: THREE.BackSide,
     blending: THREE.AdditiveBlending,
     depthWrite: false
@@ -116,7 +167,7 @@ PLANETS.forEach((p, index) => {
   const orbit = new THREE.Mesh(
     new THREE.RingGeometry(p.dist - 0.035, p.dist + 0.035, 180),
     new THREE.MeshBasicMaterial({
-      color: 0x7fa3d8, transparent: true, opacity: 0.22,
+      color: srgb(0x7fa3d8), transparent: true, opacity: 0.22,
       side: THREE.DoubleSide, depthWrite: false
     })
   );
@@ -141,7 +192,7 @@ PLANETS.forEach((p, index) => {
 
   const body = new THREE.Mesh(
     new THREE.SphereGeometry(p.radius, 48, 32),
-    new THREE.MeshStandardMaterial({ color: p.color, roughness: 0.85, metalness: 0.05 })
+    new THREE.MeshStandardMaterial({ color: srgb(p.color), roughness: 0.85, metalness: 0.05 })
   );
   tilt.add(body);
   spinners.push({ object: body, speed: p.spin });
@@ -151,7 +202,7 @@ PLANETS.forEach((p, index) => {
     tilt.add(new THREE.Mesh(
       new THREE.SphereGeometry(p.radius * 1.06, 32, 24),
       new THREE.MeshBasicMaterial({
-        color: 0x76b6ff, transparent: true, opacity: 0.22,
+        color: srgb(0x76b6ff), transparent: true, opacity: 0.22,
         side: THREE.BackSide, blending: THREE.AdditiveBlending, depthWrite: false
       })
     ));
@@ -162,7 +213,7 @@ PLANETS.forEach((p, index) => {
     const ring = new THREE.Mesh(
       new THREE.RingGeometry(p.radius * 1.45, p.radius * 2.35, 128),
       new THREE.MeshStandardMaterial({
-        color: 0xe8d7a8, roughness: 1, side: THREE.DoubleSide,
+        color: srgb(0xe8d7a8), roughness: 1, side: THREE.DoubleSide,
         transparent: true, opacity: 0.85
       })
     );
@@ -177,13 +228,72 @@ PLANETS.forEach((p, index) => {
 
     const moon = new THREE.Mesh(
       new THREE.SphereGeometry(p.moon.radius, 24, 16),
-      new THREE.MeshStandardMaterial({ color: 0xbfbfc4, roughness: 1 })
+      new THREE.MeshStandardMaterial({ color: srgb(0xbfbfc4), roughness: 1 })
     );
     moon.position.x = p.moon.dist;
     moonPivot.add(moon);
     orbiters.push({ object: moonPivot, speed: p.moon.speed });
   }
+
+  // 行星标签：挂在 holder 上跟随公转，颜色取行星色的提亮版
+  const labelColor = new THREE.Color(p.color).lerp(new THREE.Color(0xffffff), 0.45);
+  const label = makeLabel(p.name, '#' + labelColor.getHexString());
+  label.position.set(0, p.radius + 0.72, 0);
+  holder.add(label);
 });
+
+// ---------- 星空背景 ----------
+const STAR_COUNT = 4000;
+const starPositions = new Float32Array(STAR_COUNT * 3);
+const starColors = new Float32Array(STAR_COUNT * 3);
+const starTint = new THREE.Color();
+
+for (let i = 0; i < STAR_COUNT; i++) {
+  const radius = 140 + Math.random() * 460;
+  const theta = Math.random() * Math.PI * 2;
+  const phi = Math.acos(2 * Math.random() - 1);
+
+  starPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+  starPositions[i * 3 + 1] = radius * Math.cos(phi) * 0.6;   // 竖向压扁，接近银盘分布
+  starPositions[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta);
+
+  // 多数偏冷白，少数偏暖，避免星空一片死白
+  starTint.setHSL(Math.random() < 0.7 ? 0.58 : 0.10, 0.25, 0.75 + Math.random() * 0.25);
+  starColors[i * 3] = starTint.r;
+  starColors[i * 3 + 1] = starTint.g;
+  starColors[i * 3 + 2] = starTint.b;
+}
+
+const starGeometry = new THREE.BufferGeometry();
+starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+starGeometry.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
+
+const starfield = new THREE.Points(starGeometry, new THREE.PointsMaterial({
+  size: 2.4, map: starTexture, vertexColors: true, sizeAttenuation: true,
+  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+}));
+scene.add(starfield);
+
+// ---------- 小行星带 ----------
+const BELT_COUNT = 1400;
+const beltPositions = new Float32Array(BELT_COUNT * 3);
+
+for (let i = 0; i < BELT_COUNT; i++) {
+  const angle = Math.random() * Math.PI * 2;
+  const radius = 16.3 + Math.random() * 1.6;   // 卡在火星(14.3)与木星(19.0)之间
+  beltPositions[i * 3] = Math.cos(angle) * radius;
+  beltPositions[i * 3 + 1] = (Math.random() - 0.5) * 0.9;
+  beltPositions[i * 3 + 2] = Math.sin(angle) * radius;
+}
+
+const beltGeometry = new THREE.BufferGeometry();
+beltGeometry.setAttribute('position', new THREE.BufferAttribute(beltPositions, 3));
+
+const asteroidBelt = new THREE.Points(beltGeometry, new THREE.PointsMaterial({
+  color: srgb(0x9a8b78), size: 0.14, sizeAttenuation: true,
+  transparent: true, opacity: 0.9, depthWrite: false
+}));
+scene.add(asteroidBelt);
 
 // ---------- 动画循环 ----------
 const clock = new THREE.Clock();
@@ -201,8 +311,12 @@ const animate = () => {
   corona.rotation.y -= 0.04 * dt;
 
   // 太阳脉动
-  sunGlow.scale.setScalar(SUN_RADIUS * 5 * (1 + Math.sin(t * 1.6) * 0.05));
+  sunGlow.scale.setScalar(SUN_GLOW_SCALE * (1 + Math.sin(t * 1.6) * 0.05));
   sunGlow.material.opacity = 0.85 + Math.sin(t * 2.2) * 0.15;
+
+  // 背景层极缓自转 + 小行星带缓慢漂移，给静止的深空一点呼吸感
+  starfield.rotation.y += 0.012 * dt;
+  asteroidBelt.rotation.y += 0.035 * dt;
 
   controls.update();
   renderer.render(scene, camera);
