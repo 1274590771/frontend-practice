@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星球宇宙 · 太阳系微缩模型</title>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #05060f; }
+    canvas { display: block; }
+
+    #hud {
+      position: fixed; left: 26px; top: 24px;
+      font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+      color: #e8f0ff; pointer-events: none; user-select: none;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, .85);
+    }
+    #hud h1 { margin: 0 0 6px; font-size: 21px; font-weight: 600; letter-spacing: 3px; }
+    #hud p  { margin: 0; font-size: 12px; letter-spacing: 1.5px; color: #8fa6c9; }
+
+    #legend {
+      position: fixed; left: 26px; bottom: 24px;
+      font-family: "Microsoft YaHei", system-ui, sans-serif;
+      font-size: 12px; letter-spacing: 1px; line-height: 2;
+      color: #8095b4; pointer-events: none; user-select: none;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, .85);
+    }
+    #legend b { color: #d8e6ff; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div id="hud">
+    <h1>星球宇宙</h1>
+    <p>太阳系微缩模型 · THREE.js</p>
+  </div>
+  <div id="legend">
+    <div><b>左键拖动</b> 旋转视角　<b>滚轮</b> 缩放　<b>右键拖动</b> 平移</div>
+  </div>
+
+  <script src="libs/three.min.js"></script>
+  <script src="libs/OrbitControls.js"></script>
+  <script src="universe.js"></script>
+</body>
+</html>
