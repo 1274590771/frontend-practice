@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>校园信息中心（迷你版）</title>
+  <link rel="icon" href="data:,">
   <link href="libs/bootstrap.min.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
 </head>
@@ -29,12 +30,34 @@
 
     <section id="rooms" class="mb-4">
       <h2 class="h5">自习室查询</h2>
-      <p class="placeholder-block">【模块位置：自习室查询】楼层／开放状态筛选条件与自习室列表将在第 2 次提交实现。</p>
+      <div class="row g-2 mb-3">
+        <div class="col-auto">
+          <label for="floor-filter" class="form-label">楼层</label>
+          <select id="floor-filter" class="form-select">
+            <option value="all">全部</option>
+            <option value="1">1层</option>
+            <option value="2">2层</option>
+            <option value="3">3层</option>
+            <option value="4">4层</option>
+          </select>
+        </div>
+        <div class="col-auto">
+          <label for="status-filter" class="form-label">状态</label>
+          <select id="status-filter" class="form-select">
+            <option value="all">全部</option>
+            <option value="开放">开放</option>
+            <option value="闭馆">闭馆</option>
+            <option value="维修">维修</option>
+          </select>
+        </div>
+      </div>
+      <ul id="room-list" class="list-group"></ul>
     </section>
 
     <section id="stats" class="mb-4">
       <h2 class="h5">使用统计（各自习室空余座位）</h2>
-      <p class="placeholder-block">【模块位置：使用统计图表】读取 data/data.json 的 ECharts 柱状图将在第 2 次提交实现。</p>
+      <p id="status" class="alert alert-warning" style="display:none"></p>
+      <div id="usage-chart" style="height:360px"></div>
     </section>
   </main>
 
@@ -43,5 +66,7 @@
   </footer>
 
   <script src="libs/bootstrap.bundle.min.js"></script>
+  <script src="libs/echarts.min.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

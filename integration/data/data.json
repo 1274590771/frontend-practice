@@ -1,0 +1,66 @@
+{
+  "title": "自习室使用统计",
+  "source": "课程统一数据集（教学演示数据，非真实统计）",
+  "rooms": [
+    {
+      "name": "楠苑一楼自习室",
+      "seats": 120,
+      "occupied": 86
+    },
+    {
+      "name": "楠苑二楼自习室",
+      "seats": 96,
+      "occupied": 61
+    },
+    {
+      "name": "楠苑三楼研讨自习室",
+      "seats": 48,
+      "occupied": 33
+    },
+    {
+      "name": "梓苑一楼自习室",
+      "seats": 140,
+      "occupied": 92
+    },
+    {
+      "name": "梓苑二楼自习室",
+      "seats": 88,
+      "occupied": 0
+    },
+    {
+      "name": "图书馆一楼自习区",
+      "seats": 160,
+      "occupied": 118
+    },
+    {
+      "name": "图书馆二楼自习区",
+      "seats": 130,
+      "occupied": 95
+    },
+    {
+      "name": "图书馆三楼静音自习室",
+      "seats": 60,
+      "occupied": 58
+    },
+    {
+      "name": "理科楼一层通宵自习室",
+      "seats": 80,
+      "occupied": 41
+    },
+    {
+      "name": "理科楼三层自习室",
+      "seats": 72,
+      "occupied": 0
+    },
+    {
+      "name": "文科楼二层自习室",
+      "seats": 66,
+      "occupied": 52
+    },
+    {
+      "name": "文科楼四层考研自习室",
+      "seats": 110,
+      "occupied": 103
+    }
+  ]
+}

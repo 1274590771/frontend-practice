@@ -1,7 +1,15 @@
 /* 自定义样式放在Bootstrap之后引入，保证可覆盖 */
-.placeholder-block {
-  background: #f8f9fa;
-  border: 1px dashed #dee2e6;
+#usage-chart {
+  background: #fff;
+  border: 1px solid #dee2e6;
   border-radius: 8px;
-  padding: 16px;
+  padding: 8px;
+}
+
+#room-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
 }
