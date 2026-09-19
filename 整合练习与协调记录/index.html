@@ -25,26 +25,32 @@
     <section id="home" class="mb-5">
       <h1 class="h3">城市气象数据整合中心</h1>
       <p class="text-muted" id="sub-title">期末大作业原型 · 数据来源：加载中</p>
-      <div class="row g-3" id="summary-cards">
-        <div class="col-12">
-          <p class="placeholder-block">【模块位置：首页概览卡片】四个城市的年降水量与年平均气温概览将在第 2 次提交由 app.js 渲染。</p>
-        </div>
-      </div>
+      <p id="status" class="alert alert-warning" style="display:none"></p>
+      <div class="row g-3" id="summary-cards" aria-live="polite"></div>
     </section>
 
     <section id="query" class="mb-5">
-      <h2 class="h5">城市查询</h2>
-      <p class="text-muted" id="status" style="display:none"></p>
-      <div class="placeholder-block mb-3" id="query-controls">
-        【模块位置：查询条件】城市按钮组与时段下拉框将在第 2 次提交实现，筛选结果同时驱动下方看板与三维地球。
+      <h2 class="h5 mb-3">城市查询</h2>
+      <div class="row g-2 align-items-end mb-3" id="query-controls">
+        <div class="col-12 col-md-auto">
+          <span class="form-label d-block mb-1">城市</span>
+          <div id="city-filter" class="btn-group btn-group-sm flex-wrap" role="group" aria-label="城市筛选"></div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-auto">
+          <label for="period-filter" class="form-label mb-1">时段</label>
+          <select id="period-filter" class="form-select form-select-sm"></select>
+        </div>
+        <div class="col-12 col-md-auto ms-md-auto">
+          <a id="globe-link" class="btn btn-sm btn-outline-secondary" href="three-d/globe.html">
+            在三维地球上查看 →
+          </a>
+        </div>
       </div>
-      <div class="placeholder-block" id="city-list">
-        【模块位置：城市明细】按当前筛选条件列出的城市明细将在第 2 次提交实现。
-      </div>
+      <div class="row g-3" id="city-list"></div>
     </section>
 
     <section id="board" class="mb-5">
-      <h2 class="h5">数据看板</h2>
+      <h2 class="h5 mb-3">数据看板</h2>
       <div class="row g-3">
         <div class="col-lg-7">
           <h3 class="h6">各月降水量对比</h3>
@@ -67,5 +73,6 @@
   </footer>
 
   <script src="libs/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

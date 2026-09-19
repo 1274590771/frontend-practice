@@ -1,6 +1,6 @@
 /* 自定义样式放在 Bootstrap 之后引入，保证可覆盖 */
 
-/* 第 1 次提交：仅骨架样式，占位块与卡片基础外观 */
+/* 未实现模块的占位块，随提交推进逐步移除 */
 .placeholder-block {
   background: #f8f9fa;
   border: 1px dashed #dee2e6;
@@ -22,7 +22,21 @@
 }
 
 .summary-card .card-value {
-  font-size: 1.75rem;
+  font-size: 1.6rem;
   font-weight: 600;
-  margin-bottom: 0;
+  margin-bottom: 0.25rem;
+}
+
+/* 城市明细卡片：选中态与概览卡片区分开 */
+.city-card {
+  border-left: 4px solid #6c757d;
+}
+
+.city-card[data-city] .card-title {
+  color: #0d6efd;
+}
+
+/* 导航在窄屏堆叠时给条目之间留出间距 */
+.navbar-nav .nav-link {
+  padding-right: 1rem;
 }
