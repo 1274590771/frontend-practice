@@ -49,3 +49,75 @@
 .navbar-nav .nav-link {
   padding-right: 1rem;
 }
+
+/* ── 三维地球页 ── */
+.globe-page {
+  margin: 0;
+  overflow: hidden;
+  background: #0b1a2b;
+}
+
+.globe-page canvas {
+  display: block;
+}
+
+.globe-back {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 9;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #0d6efd;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.globe-back:hover {
+  background: #fff;
+}
+
+.globe-hud {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9;
+  max-width: 20rem;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: rgba(8, 20, 34, 0.78);
+  color: #dbeafe;
+}
+
+.globe-hud .h5 {
+  color: #fff;
+}
+
+/* Bootstrap 的 text-muted 在深色面板上对比度不够 */
+.globe-hint {
+  color: #9fb8d4;
+}
+
+.globe-status {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9;
+  margin: 0;
+}
+
+/* 窄屏把说明面板收窄，避免盖住整个地球 */
+@media (max-width: 575.98px) {
+  .globe-hud {
+    left: 12px;
+    right: 12px;
+    max-width: none;
+    padding: 8px 12px;
+  }
+
+  .globe-back {
+    margin-bottom: 4px;
+  }
+}

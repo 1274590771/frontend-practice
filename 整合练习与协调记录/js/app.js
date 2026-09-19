@@ -2,13 +2,7 @@
 // 一份 data/weather.json 同时驱动首页概览、城市明细、图表（charts.js）与三维地球（globe.js）。
 // 下游视图一律只读 state，不在各自文件里重新取数，否则同一屏上的数字很容易对不上。
 
-// 时段只做不跨年的连续区间，避免「冬季跨年」把月份顺序打乱后图表横轴含义不清
-const PERIODS = [
-  { id: 'all', label: '全年（1-12月）', months: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
-  { id: 'h1', label: '上半年（1-6月）', months: [0, 1, 2, 3, 4, 5] },
-  { id: 'h2', label: '下半年（7-12月）', months: [6, 7, 8, 9, 10, 11] }
-];
-
+// PERIODS / 聚合口径 / loadWeather 来自 js/data.js，三维页引的是同一份
 const state = { data: null, city: 'all', period: 'all' };
 
 // 订阅式联动：charts.js 加载后注册自己的渲染函数，app.js 不关心有几个下游视图
@@ -18,7 +12,7 @@ const emitState = () => stateListeners.forEach((fn) => fn(state));
 
 const $ = (sel) => document.querySelector(sel);
 
-const currentPeriod = () => PERIODS.find((p) => p.id === state.period);
+const currentPeriod = () => periodById(state.period);
 const allCities = () => state.data.metrics.rainfall.series.map((s) => s.category);
 const visibleCities = () =>
   state.city === 'all' ? allCities() : allCities().filter((c) => c === state.city);
@@ -30,12 +24,10 @@ const sliceMetric = (metricKey, city) => {
   return currentPeriod().months.map((i) => row.counts[i]);
 };
 
-const sumOf = (metricKey, city) => sliceMetric(metricKey, city).reduce((a, b) => a + b, 0);
-const avgOf = (metricKey, city) => {
-  const values = sliceMetric(metricKey, city);
-  return values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
-};
-const round1 = (n) => Math.round(n * 10) / 10;
+const sumOf = (metricKey, city) =>
+  sumRange(state.data.metrics[metricKey].series.find((s) => s.category === city).counts, currentPeriod().months);
+const avgOf = (metricKey, city) =>
+  avgRange(state.data.metrics[metricKey].series.find((s) => s.category === city).counts, currentPeriod().months);
 
 // ── 首页概览：四张卡片随筛选实时变化 ──
 const renderSummary = () => {
@@ -170,11 +162,7 @@ const loadData = async () => {
     if (demo === 'slow') {
       await new Promise((resolve) => setTimeout(resolve, 3000));
     }
-    const response = await fetch('data/weather.json');
-    if (!response.ok) {
-      throw new Error('HTTP ' + response.status);
-    }
-    const data = await response.json();
+    const data = await loadWeather('data/weather.json');
     if (demo === 'empty') {
       data.cities = [];
       data.metrics.rainfall.series = [];
