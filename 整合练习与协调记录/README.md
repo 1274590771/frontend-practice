@@ -94,8 +94,3 @@ python -m http.server 8900 --bind 127.0.0.1
   canvas 贴图做文字标签、以及 r128 色彩空间用 `convertSRGBToLinear` 处理的做法，
   来自课堂作业七及本仓库 `my-scene（Three.js版）`。
 - 未引入课堂之外的框架，也没有使用后端服务。
-
-## 质量清单自查
-
-自查项、证据文件与实测结论见 [`docs/self-check/README.md`](docs/self-check/README.md)，
-截图与机器可读结果在同目录下。自查脚本 `docs/self-check/capture.cjs` 可重跑。
