@@ -99,9 +99,3 @@ python -m http.server 8900 --bind 127.0.0.1
 
 自查项、证据文件与实测结论见 [`docs/self-check/README.md`](docs/self-check/README.md)，
 截图与机器可读结果在同目录下。自查脚本 `docs/self-check/capture.cjs` 可重跑。
-
-
-- **同伴审查记录**：收到的意见 + 逐条处理记录（采纳／拒绝／修改）。待收到真实意见后补。
-- **轮值协调记录**：议题、参与人、分歧、结论。待实际参与后补。
-
-补齐后应各占一次独立提交，并在本节改为指向对应文件。
