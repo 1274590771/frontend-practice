@@ -27,6 +27,15 @@
   margin-bottom: 0.25rem;
 }
 
+/* 图表容器：空数据时也是一块可见的面板，不会塌成一条线 */
+#bar-chart,
+#line-box {
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 8px;
+}
+
 /* 城市明细卡片：选中态与概览卡片区分开 */
 .city-card {
   border-left: 4px solid #6c757d;

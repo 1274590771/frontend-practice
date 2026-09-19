@@ -54,14 +54,12 @@
       <div class="row g-3">
         <div class="col-lg-7">
           <h3 class="h6">各月降水量对比</h3>
-          <div class="placeholder-block" id="bar-chart" style="height:360px">
-            【模块位置：ECharts 柱状图】第 3 次提交实现。
-          </div>
+          <div id="bar-chart" style="height:360px"></div>
         </div>
         <div class="col-lg-5">
           <h3 class="h6">月平均气温趋势</h3>
-          <div class="placeholder-block" id="line-box" style="height:360px">
-            【模块位置：Chart.js 折线图】第 3 次提交实现。
+          <div id="line-box" style="height:360px">
+            <canvas id="line-chart"></canvas>
           </div>
         </div>
       </div>
@@ -73,6 +71,9 @@
   </footer>
 
   <script src="libs/bootstrap.bundle.min.js"></script>
+  <script src="libs/echarts.min.js"></script>
+  <script src="libs/chart.umd.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/charts.js"></script>
 </body>
 </html>
