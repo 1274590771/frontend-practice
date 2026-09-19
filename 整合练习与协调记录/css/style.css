@@ -1,0 +1,28 @@
+/* 自定义样式放在 Bootstrap 之后引入，保证可覆盖 */
+
+/* 第 1 次提交：仅骨架样式，占位块与卡片基础外观 */
+.placeholder-block {
+  background: #f8f9fa;
+  border: 1px dashed #dee2e6;
+  border-radius: 8px;
+  padding: 16px;
+  color: #6c757d;
+}
+
+#board .placeholder-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.summary-card .card-title {
+  color: #6c757d;
+  font-weight: 400;
+}
+
+.summary-card .card-value {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 0;
+}

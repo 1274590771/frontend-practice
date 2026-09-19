@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>城市气象数据整合中心</title>
+  <link rel="icon" href="data:,">
+  <link href="libs/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="#home">城市气象数据整合中心</a>
+      <div class="navbar-nav">
+        <a class="nav-link active" href="#home">首页</a>
+        <a class="nav-link" href="#query">城市查询</a>
+        <a class="nav-link" href="#board">数据看板</a>
+        <a class="nav-link" href="three-d/globe.html">三维地球</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section id="home" class="mb-5">
+      <h1 class="h3">城市气象数据整合中心</h1>
+      <p class="text-muted" id="sub-title">期末大作业原型 · 数据来源：加载中</p>
+      <div class="row g-3" id="summary-cards">
+        <div class="col-12">
+          <p class="placeholder-block">【模块位置：首页概览卡片】四个城市的年降水量与年平均气温概览将在第 2 次提交由 app.js 渲染。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="query" class="mb-5">
+      <h2 class="h5">城市查询</h2>
+      <p class="text-muted" id="status" style="display:none"></p>
+      <div class="placeholder-block mb-3" id="query-controls">
+        【模块位置：查询条件】城市按钮组与时段下拉框将在第 2 次提交实现，筛选结果同时驱动下方看板与三维地球。
+      </div>
+      <div class="placeholder-block" id="city-list">
+        【模块位置：城市明细】按当前筛选条件列出的城市明细将在第 2 次提交实现。
+      </div>
+    </section>
+
+    <section id="board" class="mb-5">
+      <h2 class="h5">数据看板</h2>
+      <div class="row g-3">
+        <div class="col-lg-7">
+          <h3 class="h6">各月降水量对比</h3>
+          <div class="placeholder-block" id="bar-chart" style="height:360px">
+            【模块位置：ECharts 柱状图】第 3 次提交实现。
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <h3 class="h6">月平均气温趋势</h3>
+          <div class="placeholder-block" id="line-box" style="height:360px">
+            【模块位置：Chart.js 折线图】第 3 次提交实现。
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="text-center text-muted py-4">
+    软件开发综合实践 · 期末大作业原型 · 数据来源：自建数据集
+  </footer>
+
+  <script src="libs/bootstrap.bundle.min.js"></script>
+</body>
+</html>
