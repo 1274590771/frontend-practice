@@ -1,0 +1,7 @@
+/* 自定义样式放在Bootstrap之后引入，保证可覆盖 */
+.placeholder-block {
+  background: #f8f9fa;
+  border: 1px dashed #dee2e6;
+  border-radius: 8px;
+  padding: 16px;
+}
