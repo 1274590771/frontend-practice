@@ -1,0 +1,40 @@
+{
+  "console": [],
+  "pageErrors": [],
+  "failedRequests": [],
+  "httpErrors": [],
+  "checks": [
+    "[宽度] 1440px：.navbar-nav flex-direction = row",
+    "[宽度] 768px：.navbar-nav flex-direction = row",
+    "[宽度] 375px：.navbar-nav flex-direction = column",
+    "[导航] 「首页」-> #home (期望 #home) OK",
+    "[导航] 「自习室」-> #rooms (期望 #rooms) OK",
+    "[导航] 「使用统计」-> #stats (期望 #stats) OK",
+    "[导航] 「校园三维」-> three-d/scene.html 状态码 200",
+    "[首页卡片] 标题 = [\"自习室总数\",\"当前开放\",\"总座位数\",\"空余座位\"]",
+    "[筛选] 全部 = 12 条 (期望 12)",
+    "[筛选] 楼层=1 -> 4 条",
+    "[筛选] 楼层=2 -> 4 条",
+    "[筛选] 楼层=3 -> 3 条",
+    "[筛选] 楼层=4 -> 1 条",
+    "[筛选] 状态=开放 -> 10 条",
+    "[筛选] 状态=闭馆 -> 1 条",
+    "[筛选] 状态=维修 -> 1 条",
+    "[筛选] 楼层=1 + 状态=开放 -> 4 条",
+    "[筛选] 楼层=4 + 状态=维修 -> 空态文案「没有符合条件的自习室」",
+    "[图表] 标题 = 自习室使用统计",
+    "[图表] 纵轴单位 = 座",
+    "[图表] 系列名 = 空余座位，柱数 = 12 (期望 12)",
+    "[图表] 数据来源（data.json source）= 课程统一数据集（教学演示数据，非真实统计）",
+    "[图表] 页脚来源声明确认 = true",
+    "[断网] #status 可见 = true，文案 = 加载失败：Failed to fetch",
+    "[三维] canvas 尺寸 = 1440x900"
+  ],
+  "summary": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "pageErrors": 0,
+    "failedRequests": 0,
+    "httpErrors": 0
+  }
+}

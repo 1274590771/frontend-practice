@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>校园三维导览</title>
+  <link rel="icon" href="data:,">
+  <style>
+    body { margin: 0; }
+    .back {
+      position: fixed; top: 12px; left: 12px; z-index: 9;
+      background: #fff; padding: 6px 14px; border-radius: 6px;
+      text-decoration: none; color: #0d6efd; font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <a class="back" href="../index.html">← 返回首页</a>
+  <script src="../libs/three.min.js"></script>
+  <script src="../libs/OrbitControls.js"></script>
+  <script>
+    // 迷你版校园三维导览：课堂七展示台骨架的复用
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x223354);
+    scene.fog = new THREE.Fog(0x223354, 14, 30);
+
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(7, 5, 9);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+    const dir = new THREE.DirectionalLight(0xffffff, 0.8);
+    dir.position.set(5, 8, 6);
+    scene.add(dir);
+
+    // 地面
+    const ground = new THREE.Mesh(
+      new THREE.PlaneGeometry(24, 24),
+      new THREE.MeshStandardMaterial({ color: 0x3e5f3a })
+    );
+    ground.rotation.x = -Math.PI / 2;
+    scene.add(ground);
+
+    // 教学楼
+    const teaching = new THREE.Mesh(
+      new THREE.BoxGeometry(4, 2.4, 2),
+      new THREE.MeshStandardMaterial({ color: 0xdadada })
+    );
+    teaching.position.set(-3, 1.2, -2);
+    scene.add(teaching);
+    const roof = new THREE.Mesh(
+      new THREE.BoxGeometry(4.4, 0.4, 2.4),
+      new THREE.MeshStandardMaterial({ color: 0xb71c1c })
+    );
+    roof.position.set(-3, 2.6, -2);
+    scene.add(roof);
+
+    // 图书馆
+    const library = new THREE.Mesh(
+      new THREE.BoxGeometry(2.6, 1.8, 2.6),
+      new THREE.MeshStandardMaterial({ color: 0xcfd8dc })
+    );
+    library.position.set(2.5, 0.9, -2.5);
+    scene.add(library);
+
+    // 中心雕塑：缓转的环结（动画元素）
+    const sculpture = new THREE.Mesh(
+      new THREE.TorusKnotGeometry(0.6, 0.2, 96, 16),
+      new THREE.MeshStandardMaterial({ color: 0x4fc3f7 })
+    );
+    sculpture.position.set(0, 1.4, 1.5);
+    scene.add(sculpture);
+
+    const animate = () => {
+      requestAnimationFrame(animate);
+      sculpture.rotation.y += 0.01;
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
